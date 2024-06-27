@@ -1,36 +1,52 @@
 package domain.use_case.notation;
 
+import domain.model.notation.Deliverable;
 import domain.model.notation.Mark;
 import domain.model.notation.Project;
+import domain.model.notation.Student;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class NoterProjet {
     private final ProjectRepository projects;
+    private final StudentRepository students;
 
-    public NoterProjet(ProjectRepository projectRepository) {
-        this.projects = projectRepository;
+    public NoterProjet(ProjectRepository projects, StudentRepository students) {
+        this.projects = projects;
+        this.students = students;
     }
 
-    /*Règles notation
+    public Mark noter(String projectId, int markValue, String markComment) {
+        Project project = projects.findById(projectId);
 
-    si note < 6 ou note > 18 : justification demandée
+        Mark mark = new Mark(markValue, markComment);
 
-    si rendu en retard:
+        if (!project.hasDeliverable()) {
+            mark = new Mark(0, "No deliverable");
+        } else {
+            if (mark.isIrregular() && !mark.hasComment()) {
+                throw new IllegalArgumentException("Justification required for irregular mark");
+            }
 
-            1 point de malus par jour de retard
-    si plus de 7 jours de retard: 0
+            Deliverable deliverable = project.getDeliverable();
+            LocalDate deadline = project.getDeadline();
 
-    si pas de rendu: 0*/
-    public Mark noter(String projetId) {
-        Project project = projects.findById(projetId);
+            if (deliverable.isLate(deadline)) {
+                if (deliverable.isTooLate(deadline)) {
+                    mark = new Mark(0, "Too late");
+                } else {
+                    int daysLate = deliverable.getDaysLate(deadline);
+                    int newMarkValue = mark.getValue() - daysLate;
 
-        Mark mark = project.getMark();
-
-        if (project.getDeliverable() == null) {
-            // set to 0
+                    mark = new Mark(newMarkValue, "Late by " + daysLate + " days");
+                }
+            }
         }
 
-        if ((mark.getValue() < 6 || mark.getValue() > 18) && mark.getComment() == null) {
-            //throw exception
+        for (Student student : project.getStudents()) {
+            student.addMark(mark);
+            students.save(student);
         }
         
         return mark;

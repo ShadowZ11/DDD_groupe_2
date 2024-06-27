@@ -7,19 +7,25 @@ import java.util.List;
 
 @Getter
 public class Project {
-    private String id;
-    private String name;
-    private LocalDate deadline;
-    private List<Student> students;
-    private Teacher teacher;
+    private final String id;
+    private final LocalDate deadline;
+    private final List<Student> students;
     private Deliverable deliverable = null;
-    private Mark mark;
 
-    public Project(String id, String name, LocalDate deadline, List<Student> students, Teacher teacher) {
+    public Project(String id, LocalDate deadline, List<Student> students) {
         this.id = id;
-        this.name = name;
         this.deadline = deadline;
         this.students = students;
-        this.teacher = teacher;
+    }
+
+    public Project(String id, LocalDate deadline, List<Student> students, Deliverable deliverable) {
+        this.id = id;
+        this.deadline = deadline;
+        this.students = students;
+        this.deliverable = deliverable;
+    }
+
+    public boolean hasDeliverable() {
+        return deliverable != null;
     }
 }

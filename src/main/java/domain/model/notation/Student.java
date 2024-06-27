@@ -1,14 +1,17 @@
 package domain.model.notation;
 
-import lombok.Getter;
+import java.util.ArrayList;
+import java.util.List;
 
-@Getter
 public class Student {
-    private final String firstname;
-    private final String lastname;
+    private final String id;
+    private List<Mark> marks = new ArrayList<>();
 
-    public Student(String firstname, String lastname) {
-        this.firstname = firstname;
-        this.lastname = lastname;
+    public Student(String id) {
+        this.id = id;
+    }
+
+    public void addMark(Mark mark) {
+        marks.add(mark);
     }
 }
