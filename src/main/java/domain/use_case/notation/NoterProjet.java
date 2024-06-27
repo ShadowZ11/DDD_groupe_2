@@ -46,9 +46,10 @@ public class NoterProjet {
 
         for (Student student : project.getStudents()) {
             student.addMark(mark);
-            students.save(student);
         }
-        
+
+        students.saveMany(project.getStudents());
+
         return mark;
     }
 }
