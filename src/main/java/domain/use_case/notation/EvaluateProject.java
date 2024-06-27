@@ -6,18 +6,17 @@ import domain.model.notation.Project;
 import domain.model.notation.Student;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
-public class NoterProjet {
+public class EvaluateProject {
     private final ProjectRepository projects;
     private final StudentRepository students;
 
-    public NoterProjet(ProjectRepository projects, StudentRepository students) {
+    public EvaluateProject(ProjectRepository projects, StudentRepository students) {
         this.projects = projects;
         this.students = students;
     }
 
-    public Mark noter(String projectId, int markValue, String markComment) {
+    public Mark evaluate(String projectId, int markValue, String markComment) {
         Project project = projects.findById(projectId);
 
         Mark mark = new Mark(markValue, markComment);
@@ -26,7 +25,7 @@ public class NoterProjet {
             mark = new Mark(0, "No deliverable");
         } else {
             if (mark.isIrregular() && !mark.hasComment()) {
-                throw new IllegalArgumentException("Justification required for irregular mark");
+                throw new MissingMarkCommentException("Justification required for irregular mark");
             }
 
             Deliverable deliverable = project.getDeliverable();
