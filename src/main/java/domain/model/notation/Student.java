@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Student {
     private final String id;
-    private List<Mark> marks = new ArrayList<>();
+    private final List<Mark> marks = new ArrayList<>();
 
     public Student(String id) {
         this.id = id;

@@ -6,6 +6,8 @@ import domain.model.notation.Project;
 import domain.model.notation.Student;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -51,8 +53,9 @@ class EvaluateProjectTest {
         verifyNoMoreInteractions(projects, students);
     }
 
-    @Test
-    void shouldThrowExceptionWhenIrregularMarkHasNoComment() {
+    @ParameterizedTest
+    @ValueSource(ints = {0, 4, 5, 19, 20})
+    void shouldThrowExceptionWhenIrregularMarkHasNoComment(int markValue) {
         Project project = new Project(
             "123",
             LocalDate.of(2021, 2, 20),
@@ -66,7 +69,7 @@ class EvaluateProjectTest {
         when(projects.findById("123")).thenReturn(project);
 
         assertThrows(MissingMarkCommentException.class, () -> {
-            evaluateProject.evaluate("123", 5, null);
+            evaluateProject.evaluate("123", markValue, null);
         });
 
         verify(projects).findById("123");

@@ -9,11 +9,7 @@ import java.util.Objects;
 @Getter
 public class Mark {
     private final int value;
-    private String comment = null;
-
-    public Mark(int value) {
-        this.value = value;
-    }
+    private final String comment;
 
     public Mark(int value, String comment) {
         this.value = value;
