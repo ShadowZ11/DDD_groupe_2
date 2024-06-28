@@ -1,18 +1,10 @@
 package domain.model.notation;
 
-import lombok.Getter;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-@Getter
-public class Deliverable {
-    private final LocalDate uploadDate;
-
-    public Deliverable(LocalDate uploadDate) {
-        this.uploadDate = uploadDate;
-    }
+public record Deliverable(LocalDate uploadDate) {
 
     public boolean isLate(LocalDate deadline) {
         return uploadDate.isAfter(deadline);
@@ -34,8 +26,4 @@ public class Deliverable {
         return Objects.equals(uploadDate, that.uploadDate);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(uploadDate);
-    }
 }

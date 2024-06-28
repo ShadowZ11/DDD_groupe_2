@@ -1,20 +1,10 @@
 package domain.model.notation;
 
 import domain.use_case.notation.MissingMarkCommentException;
-import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
-@Getter
-public class Mark {
-    private final int value;
-    private final String comment;
-
-    public Mark(int value, String comment) {
-        this.value = value;
-        this.comment = comment;
-    }
+public record Mark(int value, String comment) {
 
     public boolean isIrregular() {
         return value < 6 || value > 18;
@@ -50,21 +40,9 @@ public class Mark {
 
     public Mark getDaysLateMark(Deliverable deliverable, LocalDate deadline) {
         int daysLate = deliverable.getDaysLate(deadline);
-        int newMarkValue = getValue() - daysLate;
+        int newMarkValue = value() - daysLate;
 
         return new Mark(newMarkValue, "Late by " + daysLate + " days");
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Mark mark = (Mark) o;
-        return value == mark.value && Objects.equals(comment, mark.comment);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value, comment);
-    }
 }
