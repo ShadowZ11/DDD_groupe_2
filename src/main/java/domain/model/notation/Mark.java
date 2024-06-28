@@ -47,7 +47,7 @@ public class Mark {
 
     public Mark getLateMark(Deliverable deliverable, LocalDate deadline) {
         if (deliverable.isTooLate(deadline)) {
-            return new Mark(0, "Too late");
+            return AbnormalMark.TOO_LATE.getMark();
         } else {
             return this.getDaysLateMark(deliverable, deadline);
         }
