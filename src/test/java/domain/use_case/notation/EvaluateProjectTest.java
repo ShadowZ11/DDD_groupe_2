@@ -77,6 +77,32 @@ class EvaluateProjectTest {
         verifyNoMoreInteractions(projects);
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = {0, 4, 5, 19, 20})
+    void shouldReturnMarkWhenIrregularMarkHasComment(int markValue) {
+        Project project = new Project(
+            "123",
+            LocalDate.of(2021, 2, 20),
+            List.of(
+                new Student("123"),
+                new Student("456")
+            ),
+            new Deliverable(LocalDate.of(2021, 2, 15))
+        );
+
+        when(projects.findById("123")).thenReturn(project);
+        doNothing().when(students).saveMany(project.getStudents());
+
+        Mark actualMark = evaluateProject.evaluate("123", markValue, "Good job");
+        Mark expectedMark = new Mark(markValue, "Good job");
+
+        assertEquals(expectedMark, actualMark);
+
+        verify(projects).findById("123");
+        verify(students).saveMany(project.getStudents());
+        verifyNoMoreInteractions(projects, students);
+    }
+
     @Test
     void shouldReturnZeroMarkWhenDeliverableIsTooLate() {
         Project project = new Project(

@@ -11,11 +11,6 @@ public class Mark {
     private final int value;
     private final String comment;
 
-    public Mark(int value) {
-        this.value = value;
-        this.comment = null;
-    }
-
     public Mark(int value, String comment) {
         this.value = value;
         this.comment = comment;
