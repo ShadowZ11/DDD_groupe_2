@@ -29,7 +29,7 @@ public class Project {
         Mark mark = new Mark(markValue, markComment);
 
         if (!this.hasDeliverable()) {
-            mark = mark.getNoDeliverableMark();
+            mark = new Mark(0, "No deliverable");
         } else {
             mark = mark.getDeliverableMark(this.deliverable, this.deadline);
         }

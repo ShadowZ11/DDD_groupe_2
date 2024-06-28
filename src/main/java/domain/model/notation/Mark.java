@@ -35,12 +35,22 @@ public class Mark {
         }
     }
 
-    public Mark getNoDeliverableMark() {
-        return new Mark(0, "No deliverable");
+    public Mark getDeliverableMark(Deliverable deliverable, LocalDate deadline) {
+        this.checkCommentWhenIrregular();
+
+        if (deliverable.isLate(deadline)) {
+            return this.getLateMark(deliverable, deadline);
+        }
+
+        return this;
     }
 
-    public Mark getTooLateMark() {
-        return new Mark(0, "Too late");
+    public Mark getLateMark(Deliverable deliverable, LocalDate deadline) {
+        if (deliverable.isTooLate(deadline)) {
+            return new Mark(0, "Too late");
+        } else {
+            return this.getDaysLateMark(deliverable, deadline);
+        }
     }
 
     public Mark getDaysLateMark(Deliverable deliverable, LocalDate deadline) {
@@ -48,14 +58,6 @@ public class Mark {
         int newMarkValue = getValue() - daysLate;
 
         return new Mark(newMarkValue, "Late by " + daysLate + " days");
-    }
-
-    public Mark getLateMark(Deliverable deliverable, LocalDate deadline) {
-        if (deliverable.isTooLate(deadline)) {
-            return this.getTooLateMark();
-        } else {
-            return this.getDaysLateMark(deliverable, deadline);
-        }
     }
 
     @Override
@@ -69,15 +71,5 @@ public class Mark {
     @Override
     public int hashCode() {
         return Objects.hash(value, comment);
-    }
-
-    public Mark getDeliverableMark(Deliverable deliverable, LocalDate deadline) {
-        checkCommentWhenIrregular();
-
-        if (deliverable.isLate(deadline)) {
-            return this.getLateMark(deliverable, deadline);
-        }
-
-        return this;
     }
 }
