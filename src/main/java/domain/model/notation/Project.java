@@ -25,6 +25,26 @@ public class Project {
         this.deliverable = deliverable;
     }
 
+    public Mark getMark(int markValue, String markComment) {
+        Mark mark = new Mark(markValue, markComment);
+
+        if (!this.hasDeliverable()) {
+            mark = mark.getNoDeliverableMark();
+        } else {
+            mark = mark.getDeliverableMark(this.deliverable, this.deadline);
+        }
+
+        this.assignMarkToStudents(mark);
+
+        return mark;
+    }
+
+    public void assignMarkToStudents(Mark mark) {
+        for (Student student : this.getStudents()) {
+            student.addMark(mark);
+        }
+    }
+
     public boolean hasDeliverable() {
         return deliverable != null;
     }

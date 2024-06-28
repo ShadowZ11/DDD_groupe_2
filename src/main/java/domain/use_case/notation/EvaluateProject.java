@@ -1,11 +1,7 @@
 package domain.use_case.notation;
 
-import domain.model.notation.Deliverable;
 import domain.model.notation.Mark;
 import domain.model.notation.Project;
-import domain.model.notation.Student;
-
-import java.time.LocalDate;
 
 public class EvaluateProject {
     private final ProjectRepository projects;
@@ -19,33 +15,7 @@ public class EvaluateProject {
     public Mark evaluate(String projectId, int markValue, String markComment) {
         Project project = projects.findById(projectId);
 
-        Mark mark = new Mark(markValue, markComment);
-
-        if (!project.hasDeliverable()) {
-            mark = new Mark(0, "No deliverable");
-        } else {
-            if (mark.isIrregular() && !mark.hasComment()) {
-                throw new MissingMarkCommentException("Justification required for irregular mark");
-            }
-
-            Deliverable deliverable = project.getDeliverable();
-            LocalDate deadline = project.getDeadline();
-
-            if (deliverable.isLate(deadline)) {
-                if (deliverable.isTooLate(deadline)) {
-                    mark = new Mark(0, "Too late");
-                } else {
-                    int daysLate = deliverable.getDaysLate(deadline);
-                    int newMarkValue = mark.getValue() - daysLate;
-
-                    mark = new Mark(newMarkValue, "Late by " + daysLate + " days");
-                }
-            }
-        }
-
-        for (Student student : project.getStudents()) {
-            student.addMark(mark);
-        }
+        Mark mark = project.getMark(markValue, markComment);
 
         students.saveMany(project.getStudents());
 
